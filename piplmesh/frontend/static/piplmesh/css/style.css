@@ -53,6 +53,10 @@ body {
 		position: relative;
 	}
 	
+		.main #cse {
+			width: 100%;
+		}
+		
 	.footer {
 		border-top: 1px solid #CCC;
 		padding-top:20px;
