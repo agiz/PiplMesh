@@ -1,0 +1,16 @@
+{% extends "plain.html" %}
+{% load i18n %}
+{% block title %}{% trans "Register" %}{% endblock %}
+
+{% block content %}
+<div class="main convert">
+    <h2>{% trans "Registration" %}</h2>
+    
+    <form method="post" action="{% url lazysignup_convert %}">
+        {% csrf_token %} 
+        {{ form.as_p }}
+        <input type="hidden" name="redirect_to" value="{% if request.GET.redirect_to %}{{ request.GET.redirect_to }}{% else %}{{ redirect_to }}{% endif %}">
+        <input type="submit" value="{% trans "Submit" %}" />
+    </form>
+</div>
+{% endblock %}

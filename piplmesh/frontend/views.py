@@ -1,14 +1,11 @@
 from django.views import generic as generic_views
+from django.utils import decorators as utils_decorators
+from lazysignup import decorators as lazysignup_decorators
 
-class HomeView(generic_views.TemplateView):
+class LazyUserMixin(object):
+    @utils_decorators.method_decorator(lazysignup_decorators.allow_lazy_user)
+    def dispatch(self, *args, **kwargs):
+        return super(LazyUserMixin, self).dispatch(*args, **kwargs)
+
+class HomeView(LazyUserMixin, generic_views.TemplateView):
     template_name = 'home.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(HomeView, self).get_context_data(**kwargs)
-
-        context.update({
-            'search_engine': 'Google',
-            'search_engine_logo': 'google_logo.png'
-        })
-
-        return context
