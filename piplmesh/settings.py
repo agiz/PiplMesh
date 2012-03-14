@@ -173,3 +173,5 @@ LOGGING = {
         },
     }
 }
+
+SEARCH_ENGINE_UNIQUE_ID = ''
