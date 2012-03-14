@@ -46,7 +46,11 @@ body {
 			padding-top: 10px;
 			display: inline-block;
 		}
-
+		
+		.header .search #cse-search-form {
+			width: 100%;
+		}
+	
 	.main {
 		clear: both;
 		text-align: center;
