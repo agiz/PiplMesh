@@ -174,4 +174,5 @@ LOGGING = {
     }
 }
 
+# Google CSE unique search id is obtainable at http://www.google.com/cse/manage/create
 SEARCH_ENGINE_UNIQUE_ID = ''
