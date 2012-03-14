@@ -1,5 +1,6 @@
-from django.views import generic as generic_views
 from django.utils import decorators as utils_decorators
+from django.views import generic as generic_views
+
 from lazysignup import decorators as lazysignup_decorators
 
 class LazyUserMixin(object):
