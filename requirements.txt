@@ -1,2 +1,10 @@
 Django==1.4
 mongoengine==0.6.3
+
+
+
+
+
+
+
+
