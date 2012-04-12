@@ -1,0 +1,8 @@
+{% load i18n %}
+<div id="channel">
+channel
+            {% if user.is_authenticated %}
+                <p>{% trans "Username:" %}<strong>{{ user.username }}</strong> </p>
+                <p>{% trans "Channel:" %}<strong>{{ user.channel }}</strong> </p>
+            {% endif %}
+</div>
