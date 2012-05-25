@@ -8,7 +8,11 @@
         <link rel="stylesheet" href="{{ STATIC_URL }}piplmesh/css/style.css" type="text/css" media="screen" />
         <script src="{{ STATIC_URL }}piplmesh/jquery/jquery.js" type="text/javascript"></script>
         <script type="text/javascript" src="{{ STATIC_URL }}pushserver/updates.js"></script>
+        <script src="{{ STATIC_URL }}piplmesh/js/date.js" type="text/javascript"></script>
         <script src="{{ STATIC_URL }}piplmesh/js/home.js" type="text/javascript"></script>
+        <script src="https://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAmW9WFNNiQwBMneBJZLweHBTMG7k3KTKf1WfjbCm8DvxYvPytGRQkNdV6a2-eKJ9Yl_DEH6ja_ScNlw" type="text/javascript"></script>
+        <script src="{{ STATIC_URL }}piplmesh/jquery/jquery.reversegeo.js" type="text/javascript"></script>
+        <script src="{{ STATIC_URL }}piplmesh/js/culture.si.js" type="text/javascript"></script>
         <script type="text/javascript">
             $.updates.subscribe({
                 'home_channel': '{% filter escapejs %}{% channel_url HOME_CHANNEL_ID %}{% endfilter %}'
