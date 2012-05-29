@@ -73,13 +73,13 @@ def get_node(request):
         node._outside_request = CLOSEST_LATITUDE_SESSION_KEY in request.session or CLOSEST_LONGITUDE_SESSION_KEY in request.session
 
         # TODO: These request should use mongoengine queries
-        return node
         #if node.is_inside_request():
         #    if LATITUDE_SESSION_KEY not in request.session and LONGITUDE_SESSION_KEY not in request.session:
         #        return node
         #elif node.is_outside_request():
         #    if request.session.get(CLOSEST_LATITUDE_SESSION_KEY) == request.session.get(LATITUDE_SESSION_KEY) and request.session.get(CLOSEST_LONGITUDE_SESSION_KEY) == request.session.get(LONGITUDE_SESSION_KEY):
         #        return node
+        return node
 
     node = None
     flush_session(request)
