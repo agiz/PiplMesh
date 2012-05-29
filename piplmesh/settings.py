@@ -197,6 +197,8 @@ PUSH_SERVER = {
 }
 
 CHECK_ONLINE_USERS_INTERVAL = 10
+CHECK_NODES_INTERVAL = 60
+CHECK_VENUES_INTERVAL = 60
 
 CELERY_RESULT_BACKEND = 'mongodb'
 CELERY_MONGODB_BACKEND_SETTINGS = {
@@ -221,6 +223,16 @@ CELERYBEAT_SCHEDULE = {
     'check_online_users': {
         'task': 'piplmesh.frontend.tasks.check_online_users',
         'schedule': datetime.timedelta(seconds=CHECK_ONLINE_USERS_INTERVAL),
+        'args': (),
+    },
+    'update_nodes': {
+        'task': 'piplmesh.frontend.tasks.update_nodes',
+        'schedule': datetime.timedelta(seconds=CHECK_NODES_INTERVAL),
+        'args': (),
+    },
+    'update_venues': {
+        'task': 'piplmesh.frontend.tasks.update_venues',
+        'schedule': datetime.timedelta(seconds=CHECK_VENUES_INTERVAL),
         'args': (),
     },
 }
