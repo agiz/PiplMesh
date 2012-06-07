@@ -1,7 +1,8 @@
+var map;
 $(document).ready(function () {
     var nodeLocation = new google.maps.LatLng(node.latitude, node.longitude);
     var myOptions = {
-        zoom: 15,
+        zoom: 13,
         center: nodeLocation,
         scrollwheel: false,
         navigationControl: false,
@@ -10,7 +11,7 @@ $(document).ready(function () {
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         streetViewControl: false
     };
-    var map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
+    map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
     var nodeName = $('<p/>').text(node.name).append(' | ');
     var nodeWebsite = $('<a/>').prop('href', node.url).text(gettext("more info"));
     nodeName.append(nodeWebsite);
