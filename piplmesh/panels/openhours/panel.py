@@ -2,11 +2,11 @@ from django.utils.translation import ugettext_lazy as _
 
 from piplmesh import panels
 
-class OpenhoursPanel(panels.BasePanel):
+class OpenHoursPanel(panels.BasePanel):
     def get_context(self, context):
         context.update({
-            'header': _("Openhours"),
+            'header': _("OpenHours"),
         })
         return context
 
-panels.panels_pool.register(OpenhoursPanel)
+panels.panels_pool.register(OpenHoursPanel)
