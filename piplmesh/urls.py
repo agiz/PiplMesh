@@ -7,6 +7,10 @@ from tastypie import api
 from piplmesh.account import models, views as account_views
 from piplmesh.api import resources
 from piplmesh.frontend import debug as debug_views, views as frontend_views
+from piplmesh import panels
+
+# PiplMesh panels auto-discovery
+panels.panels_pool.discover_panels()
 
 v1_api = api.Api(api_name='v1')
 v1_api.register(resources.UserResource())
@@ -56,12 +60,12 @@ urlpatterns = patterns('',
     url(r'^user/(?P<username>' + models.USERNAME_REGEX + ')/$', frontend_views.UserView.as_view(), name='profile'),
     url(r'^account/$', account_views.AccountChangeView.as_view(), name='account'),
     url(r'^account/password/change/$', account_views.PasswordChangeView.as_view(), name='password_change'),
+    url(r'^account/setlanguage/$', account_views.set_language, name='set_language'),
 
     # RESTful API
     url(r'^api/', include(v1_api.urls)),
 
     # Internationalization support
-    url(r'^' + I18N_URL, include('django.conf.urls.i18n')),
     url(r'^' + I18N_URL + 'js/$', 'django.views.i18n.javascript_catalog', js_info_dict),
 
     # Internals
