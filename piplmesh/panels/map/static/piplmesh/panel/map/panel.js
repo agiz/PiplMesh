@@ -2,7 +2,7 @@ var map;
 $(document).ready(function () {
     var nodeLocation = new google.maps.LatLng(node.latitude, node.longitude);
     var myOptions = {
-        zoom: 13,
+        zoom: 15,
         center: nodeLocation,
         scrollwheel: false,
         navigationControl: false,
