@@ -161,17 +161,19 @@ deferred.done(function () {
                 });
                 venue.marker = marker;
                 google.maps.event.addListener(marker, 'click', function (event) {
-                    $('#openhours_list').animate(
-                        {
-                            scrollTop: venue.li.offset().top - $('#openhours_list > li:first').offset().top
-                        },
-                        300,
-                        function () {
-                            if (venue.li.is(':visible')) {
-                                venue.li.effect('highlight', {}, 2000);
+                    if (venue.li && venue.li.offset() && $('#openhours_list > li:first') && $('#openhours_list > li:first').offset()) {
+                        $('#openhours_list').animate(
+                            {
+                                scrollTop: venue.li.offset().top - $('#openhours_list > li:first').offset().top
+                            },
+                            300,
+                            function () {
+                                if (venue.li.is(':visible')) {
+                                    venue.li.effect('highlight', {}, 2000);
+                                }
                             }
-                        }
-                    );
+                        );
+                    }
                 });
             });
             $('#filter_venues').change(redraw_venues).keyup(redraw_venues);
