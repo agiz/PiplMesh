@@ -1,3 +1,4 @@
+var deferred = $.Deferred();
 var map;
 $(document).ready(function () {
     var nodeLocation = new google.maps.LatLng(node.latitude, node.longitude);
@@ -20,5 +21,8 @@ $(document).ready(function () {
         position: nodeLocation,
         map: map,
         title: node.name
+    });
+    google.maps.event.addListenerOnce(map, 'idle', function () {
+        deferred.resolve();
     });
 });
