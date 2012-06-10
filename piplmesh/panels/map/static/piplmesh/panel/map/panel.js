@@ -1,5 +1,6 @@
 var deferred = $.Deferred();
 var map;
+var map_edge;
 $(document).ready(function () {
     var nodeLocation = new google.maps.LatLng(node.latitude, node.longitude);
     var myOptions = {
@@ -23,6 +24,9 @@ $(document).ready(function () {
         title: node.name
     });
     google.maps.event.addListenerOnce(map, 'idle', function () {
+        var bounds = map.getBounds();
+        var boundCoord = new google.maps.LatLng(node.latitude, bounds.ea.b);
+        map_edge = google.maps.geometry.spherical.computeDistanceBetween(nodeLocation, boundCoord);
         deferred.resolve();
     });
 });

@@ -76,6 +76,9 @@ deferred.done(function () {
     function redraw_venues() {
         var keys = [];
         $.each(shownVenues, function (key, venue) {
+            if (map_edge < venue.distance) {
+                return true;
+            }
             keys.push(key);
         });
         keys.sort(function (key1, key2) {
