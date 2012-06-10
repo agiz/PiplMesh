@@ -5,6 +5,7 @@ from piplmesh.panels.map import panel as map_panel
 
 class OpenHoursPanel(panels.BasePanel):
     dependencies = (map_panel.MapPanel.get_name(),)
+
     def get_context(self, context):
         context.update({
             'header': _("OpenHours"),
