@@ -23,7 +23,7 @@ jQuery.fn.fixHover = function(){
     });
 }
 
-$(document).ready(function () {
+deferred.done(function () {
     var shownVenues = {};
 
     function get_distance(d) {
@@ -65,9 +65,9 @@ $(document).ready(function () {
         }
         self.today = self.is_open ? gettext("open") : gettext("closed");
         self.location = new google.maps.LatLng(self.lat, self.lng);
-        self.image = 'http://www.google.com/intl/en_us/mapfiles/ms/micons/yellow-dot.png';
+        self.image = 'https://www.google.com/intl/en_us/mapfiles/ms/micons/yellow-dot.png';
         if ('is_open' in self && self.is_open == true) {
-            self.image = 'http://www.google.com/intl/en_us/mapfiles/ms/micons/green-dot.png';
+            self.image = 'https://www.google.com/intl/en_us/mapfiles/ms/micons/green-dot.png';
         }
         self.li = $('<li/>');
         self._key = [self.distance, self.name.toLowerCase()];
@@ -108,7 +108,7 @@ $(document).ready(function () {
                             venue.today = venue[day];
                         }
                         open_hours.append($('<dt/>').text(gettext(day.substr(5))).append(":"));
-                        open_hours.append($('<dd/>').text(day));
+                        open_hours.append($('<dd/>').text(venue[day]));
                     }
                 });
                 var today_label = $('<span/>').text(gettext("Today:")).append(" ");
@@ -122,7 +122,9 @@ $(document).ready(function () {
                     }
                 );
                 div.append(today_label);
-                div.append(open_hours);
+                if (open_hours.children().length > 0) {
+                    div.append(open_hours);
+                }
                 if ('sid' in venue) {
                     var website = 'http://odpiralnicasi.com/spots/' + venue.sid;
                     var website_image = $('<img/>').prop({
