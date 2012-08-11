@@ -41,22 +41,22 @@
 
 .oh-clearfix:after {
     content: ".";
-    display:block;
-    height:0;
-    clear:both;
-    visibility:hidden;
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
 }
 
 .oh_clearfix {
-    display:inline-block;
+    display: inline-block;
 }
 
 * html .oh_clearfix {
-    height:1%;
+    height: 1%;
 }
 
 .oh_clearfix {
-    display:block;
+    display: block;
 }
 
 .oh_tooltip {
