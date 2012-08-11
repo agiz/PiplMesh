@@ -3,7 +3,7 @@
 jQuery.fn.fixHover = function(){
     $(this).each(function () {
         var hoverClasses = ' hover';
-        if ($(this).attr('class')) {        
+        if ($(this).attr('class')) {
             var classes = $(this).attr('class');
             var classArray = classes.split(' ');
             $(classArray).each(function () {
@@ -23,7 +23,7 @@ jQuery.fn.fixHover = function(){
     });
 }
 
-deferred.done(function () {
+map_loaded.done(function () {
     var shownVenues = {};
 
     function get_distance(d) {
@@ -87,7 +87,7 @@ deferred.done(function () {
             return 0;
         });
         $('#openhours_list').empty();
-    
+
         var filterVenues = $('#filter_venues').val().toLowerCase();
         $.each(keys, function (i, key) {
             if (filterVenues === '' || key.indexOf(filterVenues) !== -1) {
