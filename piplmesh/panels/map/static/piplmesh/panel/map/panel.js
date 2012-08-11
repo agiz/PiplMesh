@@ -1,4 +1,4 @@
-var deferred = $.Deferred();
+var map_loaded = $.Deferred();
 var map;
 var map_edge;
 $(document).ready(function () {
@@ -25,8 +25,8 @@ $(document).ready(function () {
     });
     google.maps.event.addListenerOnce(map, 'idle', function () {
         var bounds = map.getBounds();
-        var boundCoord = new google.maps.LatLng(node.latitude, bounds.ea.b);
-        map_edge = google.maps.geometry.spherical.computeDistanceBetween(nodeLocation, boundCoord);
-        deferred.resolve();
+        var farRightEdge = new google.maps.LatLng(node.latitude, bounds.ea.b);
+        map_edge = google.maps.geometry.spherical.computeDistanceBetween(nodeLocation, farRightEdge);
+        map_loaded.resolve();
     });
 });
