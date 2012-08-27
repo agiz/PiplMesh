@@ -18,8 +18,7 @@ jQuery.fn.fixHover = function(){
         function() {
             if (classes) $(this).attr('class', classes);
             else $(this).removeClass('hover');
-        }
-        );
+        });
     });
 }
 
