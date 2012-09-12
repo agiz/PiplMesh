@@ -1,14 +1,23 @@
-from django import http, template
+import smtplib
+
+from django import dispatch, http, template
 from django.conf import settings
+from django.contrib import messages
+from django.core import mail, urlresolvers
 from django.core.files import storage
+from django.utils import simplejson
+from django.utils.translation import ugettext_lazy as _
 from django.views import generic as generic_views
 
 from tastypie import http as tastypie_http
 
 from mongogeneric import detail
 
+from pushserver.utils import updates
+
 from piplmesh.account import models as account_models
-from piplmesh.api import models as api_models, resources
+from piplmesh.api import models as api_models, resources, signals
+from piplmesh.frontend import forms
 
 HOME_CHANNEL_ID = 'home'
 
@@ -21,6 +30,28 @@ class OutsideView(generic_views.TemplateView):
 
 class SearchView(generic_views.TemplateView):
     template_name = 'search.html'
+
+class AboutView(generic_views.TemplateView):
+    template_name = 'about.html'
+
+class PrivacyView(generic_views.TemplateView):
+    template_name = 'privacy.html'
+      
+class ContactView(generic_views.FormView):
+    """
+    This view checks if all contact data are valid and then sends e-mail to site managers.
+    
+    User is redirected back to the contact page.
+    """
+    
+    template_name = 'contact.html'
+    success_url = urlresolvers.reverse_lazy('contact')
+    form_class = forms.ContactForm
+
+    def form_valid(self, form):
+        mail.mail_managers(form.cleaned_data['subject'], form.cleaned_data['message'], form.cleaned_data['email'])
+        messages.success(self.request, _("Thank you. Your message has been successfully sent."))
+        return super(ContactView, self).form_valid(form)
 
 class UserView(detail.DetailView):
     """
@@ -63,7 +94,7 @@ def upload_view(request):
 
 def forbidden_view(request, reason=''):
     """
-    Displays 403 fobidden page. For example, when request fails CSRF protection.
+    Displays 403 forbidden page. For example, when request fails CSRF protection.
     """
 
     from django.middleware import csrf
@@ -73,3 +104,46 @@ def forbidden_view(request, reason=''):
         'reason': reason,
         'no_referer': reason == csrf.REASON_NO_REFERER,
     })))
+
+@dispatch.receiver(signals.post_created)
+def send_update_on_new_post(sender, post, request, bundle, **kwargs):
+    """
+    Sends update to push server when a new post is created.
+    """
+    if post.is_published:
+        output_bundle = sender.full_dehydrate(bundle)
+        output_bundle = sender.alter_detail_data_to_serialize(request, output_bundle)
+
+        serialized = sender.serialize(request, {
+            'type': 'post_new',
+            'post': output_bundle.data,
+        }, 'application/json')
+
+        updates.send_update(HOME_CHANNEL_ID, serialized, True)
+
+def panels_collapse(request):
+    if request.method == 'POST':
+        request.user.panels_collapsed[request.POST['name']] = True if request.POST['collapsed'] == 'true' else False
+        request.user.save()
+        return http.HttpResponse()
+    else:
+        return http.HttpResponse(simplejson.dumps(request.user.panels_collapsed), mimetype='application/json')
+
+def panels_order(request):
+    if request.method == 'POST':
+        panels = []
+
+        for name, column in zip(request.POST.getlist('names'), request.POST.getlist('columns')):
+            column = int(column)
+            if column == len(panels):
+                panels.append([])
+            panels[column].append(name)
+
+        request.user.panels_order[request.POST['number_of_columns']] = panels
+        request.user.save()
+
+        return http.HttpResponse()
+    else:
+        number_of_columns = request.GET['number_of_columns']
+        panels = request.user.panels_order.get(number_of_columns, [])
+        return http.HttpResponse(simplejson.dumps(panels), mimetype='application/json')

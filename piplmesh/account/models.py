@@ -19,17 +19,30 @@ from .. import panels
 
 LOWER_DATE_LIMIT = 366 * 120
 USERNAME_REGEX = r'[\w.@+-]+'
+CONFIRMATION_TOKEN_VALIDITY = 5 # days
 
 def upper_birthdate_limit():
-    return datetime.datetime.today()
+    return timezone.now().date()
 
 def lower_birthdate_limit():
-    return datetime.datetime.today() - datetime.timedelta(LOWER_DATE_LIMIT)
+    return timezone.now().date() - datetime.timedelta(LOWER_DATE_LIMIT)
 
 class Connection(mongoengine.EmbeddedDocument):
     http_if_none_match = mongoengine.StringField()
     http_if_modified_since = mongoengine.StringField()
     channel_id = mongoengine.StringField()
+
+class EmailConfirmationToken(mongoengine.EmbeddedDocument):
+    value = mongoengine.StringField(max_length=20, required=True)
+    created_time = mongoengine.DateTimeField(default=lambda: timezone.now(), required=True)
+
+    def check_token(self, confirmation_token):
+        if confirmation_token != self.value:
+            return False
+        elif (timezone.now() - self.created_time).days > CONFIRMATION_TOKEN_VALIDITY:
+            return False
+        else:
+            return True
 
 class TwitterAccessToken(mongoengine.EmbeddedDocument):
     key = mongoengine.StringField(max_length=150)
@@ -62,9 +75,18 @@ class User(auth.User):
     foursquare_access_token = mongoengine.StringField(max_length=150)
     foursquare_profile_data = mongoengine.DictField()
 
+    browserid_profile_data = mongoengine.DictField()
+
     connections = mongoengine.ListField(mongoengine.EmbeddedDocumentField(Connection))
     connection_last_unsubscribe = mongoengine.DateTimeField()
     is_online = mongoengine.BooleanField(default=False)
+
+    email_confirmed = mongoengine.BooleanField(default=False)
+    email_confirmation_token = mongoengine.EmbeddedDocumentField(EmailConfirmationToken)
+
+    # TODO: Model for panel settings should be more semantic.
+    panels_collapsed = mongoengine.DictField()
+    panels_order = mongoengine.DictField()
 
     @models.permalink
     def get_absolute_url(self):
@@ -82,7 +104,12 @@ class User(auth.User):
 
     def is_authenticated(self):
         # TODO: Check if *_data fields are really false if not linked with third-party authentication
-        return self.has_usable_password() or self.facebook_profile_data or self.twitter_profile_data or self.google_profile_data or self.foursquare_profile_data
+        return self.has_usable_password() or \
+            self.facebook_profile_data or \
+            self.twitter_profile_data or \
+            self.google_profile_data or \
+            self.foursquare_profile_data or \
+            self.browserid_profile_data
 
     def check_password(self, raw_password):
         def setter(raw_password):
