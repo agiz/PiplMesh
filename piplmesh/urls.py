@@ -12,11 +12,18 @@ from piplmesh import panels
 # PiplMesh panels auto-discovery
 panels.panels_pool.discover_panels()
 
+# So that we can access resources outside their request handlers
+user_resource = resources.UserResource()
+uploadedfile_resource = resources.UploadedFileResource()
+post_resource = resources.PostResource()
+notification_resource = resources.NotificationResource()
+
 API_NAME = 'v1'
 v1_api = api.Api(api_name=API_NAME)
-v1_api.register(resources.UserResource())
-v1_api.register(resources.UploadedFileResource())
-v1_api.register(resources.PostResource())
+v1_api.register(user_resource)
+v1_api.register(uploadedfile_resource)
+v1_api.register(post_resource)
+v1_api.register(notification_resource)
 
 js_info_dict = {
     'packages': (
@@ -37,7 +44,10 @@ urlpatterns = patterns('',
     url(r'^search/', frontend_views.SearchView.as_view(), name='search'),
     
     url(r'^upload/$', frontend_views.upload_view, name='upload'),
-    
+
+    # Mock location
+    url(r'^location/$', frontend_views.LocationsView.as_view(), name='mock_location'),
+
     # Registration, login, logout
     url(r'^register/$', account_views.RegistrationView.as_view(), name='registration'),
     url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'user/login.html'}, name='login'),
