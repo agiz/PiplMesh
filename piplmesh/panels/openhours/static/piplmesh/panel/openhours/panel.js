@@ -35,11 +35,12 @@ map_loaded.done(function () {
     }
 
     function toggleBounce(marker) {
-        if (marker.getAnimation() != null) {
+        if (marker.getAnimation() !== null) {
             marker.setAnimation(null);
-        } else {
+        }
+        else {
             marker.setAnimation(google.maps.Animation.BOUNCE);
-            setTimeout(function(){ marker.setAnimation(null); }, 750);
+            setTimeout(function () { marker.setAnimation(null); }, 750);
         }
     }
 
@@ -49,23 +50,26 @@ map_loaded.done(function () {
         if ('distance' in self) {
             self.distance = get_distance(self.distance);
         }
-        self.address = '';
+        self.address = "";
         if ('full_address' in self) {
             self.address = self.full_address;
-        } else if ('street' in self && 'city' in self) {
+        }
+        else if ('street' in self && 'city' in self) {
             self.address = self.street + ", " + self.city;
         }
         if ('combined_name' in self) {
             self.name = self.combined_name;
-        } else if ('company' in self && 'name' in self) {
+        }
+        else if ('company' in self && 'name' in self) {
             self.name = self.company + " " + self.name;
-        } else if ('company' in self || 'name' in self) {
+        }
+        else if ('company' in self || 'name' in self) {
             self.name = self.company || self.name;
         }
         self.today = self.is_open ? gettext("open") : gettext("closed");
         self.location = new google.maps.LatLng(self.lat, self.lng);
         self.image = 'https://www.google.com/intl/en_us/mapfiles/ms/micons/yellow-dot.png';
-        if ('is_open' in self && self.is_open == true) {
+        if ('is_open' in self && self.is_open) {
             self.image = 'https://www.google.com/intl/en_us/mapfiles/ms/micons/green-dot.png';
         }
         self.li = $('<li/>');
@@ -106,7 +110,7 @@ map_loaded.done(function () {
                 });
                 $.each(days, function (j, day) {
                     if (day in venue && venue[day].length > 0) {
-                        if (day_of_week == (j+1)%7) {
+                        if (day_of_week == (j + 1) % 7) {
                             venue.today = venue[day];
                         }
                         open_hours.append($('<dt/>').text(gettext(day.substr(5))).append(":"));
@@ -117,10 +121,10 @@ map_loaded.done(function () {
                 today_label.append(venue.today);
                 today_label.hover(
                     function () {
-                        $(this).parent().find('dl:hidden').css('top', venue.li.offset().top + 'px').fadeIn(500);
+                        $(this).parent().find('dl:hidden').css('top', venue.li.offset().top + 'px').fadeIn('fast');
                     },
                     function () {
-                        $(this).parent().find('dl:visible').fadeOut(500);
+                        $(this).parent().find('dl:visible').fadeOut('fast');
                     }
                 );
                 div.append(today_label);
@@ -148,7 +152,7 @@ map_loaded.done(function () {
             lat: node.latitude,
             lng: node.longitude
         },
-        function(data) {
+        function (data, textStatus, jqXHR) {
             $.each(data['spots'], function (i, spot) {
                 var venue = new Venue(spot);
                 shownVenues[venue._key] = venue;
@@ -165,10 +169,10 @@ map_loaded.done(function () {
                             {
                                 scrollTop: venue.li.offset().top - $('#openhours_list > li:first').offset().top
                             },
-                            300,
+                            'fast',
                             function () {
                                 if (venue.li.is(':visible')) {
-                                    venue.li.effect('highlight', {}, 2000);
+                                    venue.li.effect('highlight', {}, 'slow');
                                 }
                             }
                         );
